@@ -33,7 +33,6 @@ class InterfaceRepositorio(Generic[T]):
             item = item.__dict__
             updateItem = {"$set": item}
             x = laColeccion.update_one({"_id": _id}, updateItem)
-            print("x: ", x)
         else:
             _id = laColeccion.insert_one(item.__dict__)
             elId = _id.inserted_id.__str__()
@@ -59,9 +58,7 @@ class InterfaceRepositorio(Generic[T]):
     def findById(self, id):
         laColeccion = self.baseDatos[self.coleccion]
         x = laColeccion.find_one({"_id": ObjectId(id)})
-        print("la coleccion de Candidatol: ", x)
         x = self.getValuesDBRef(x)
-        print("x1: ", x)
         if x == None:
             x = {}
         else:
@@ -69,7 +66,6 @@ class InterfaceRepositorio(Generic[T]):
         return x
 
     def findAll(self):
-        print(self.coleccion)
         laColeccion = self.baseDatos[self.coleccion]
         data = []
         for x in laColeccion.find():
@@ -104,10 +100,7 @@ class InterfaceRepositorio(Generic[T]):
         for k in keys:
             if isinstance(x[k], DBRef):
                 laColeccion = self.baseDatos[x[k].collection]
-                print("ID: ", x[k])
-                print("la Coleccion departamento: ", laColeccion)
                 valor = laColeccion.find_one({"_id": ObjectId(x[k].id)})
-                print("Valor de la variable valor: ", valor)
                 valor["_id"] = valor["_id"].__str__()
                 x[k] = valor
                 x[k] = self.getValuesDBRef(x[k])

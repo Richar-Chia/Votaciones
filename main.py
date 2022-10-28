@@ -22,15 +22,14 @@ ca = certifi.where()
 client = pymongo.MongoClient("mongodb+srv://rinwer:824657919@cluster0.g0rlmpl.mongodb.net/DataBaseUniversidad?retryWrites=true&w=majority",tlsCAFile=ca)
 db = client.test
 
-#Metodo para mostrar la info del servidor en linea.
+#*************** Metodo para mostrar la info del servidor en linea. ***************#
 @app.route("/", methods=['GET'])
 def loadFileConfig():
     with open('config.json') as file:
         data = json.load(file)
         return data
 
-################################################################################ Metodos para actualizar la coleccion Mesa.
-
+#*************** Metodos para actualizar la coleccion Mesa ***************#
 @app.route("/mesas", methods=['GET'])
 def getEstudiantes():
     json = miControladorMesa.index();
@@ -59,8 +58,7 @@ def eliminarEstudiante(id):
     json = miControladorMesa.delete(id);
     return jsonify(json);
 
-################################################################################ Metodos para coleccion partidos
-
+#*************** Metodos para coleccion partidos ***************#
 @app.route("/partidos", methods=['GET'])
 def getPartidos():
     json = miControladorPartido.index();
@@ -89,8 +87,7 @@ def eliminarPartido(id):
     json = miControladorPartido.delete(id);
     return jsonify(json);
 
-################################################################################ Metodos para coleccion candidatos
-
+#*************** Metodos para coleccion candidatos ***************#
 @app.route("/candidatos", methods=['GET'])
 def getcandidatos():
     json = miControladorCandidato.index();
@@ -119,65 +116,69 @@ def eliminarcandidato(id):
     json = miControladorCandidato.delete(id);
     return jsonify(json);
 
-################################################################################ 1-n relación Partido-Materilas
-
+#*************** 1-n relación Partido-candidatos ***************#
 @app.route("/candidatos/<string:id>/partidos/<string:id_partido>",methods=['PUT'])
 def asignarPartidoACandidato(id,id_partido):
     json=miControladorCandidato.asignarPartido(id,id_partido)
     return jsonify(json)
 
-################################################################################ n-n colección resultados
+#*************** relació n-n colección resultados ***************#
 
+#-------listar todos los resultados de todas las mesas-------#
 @app.route("/resultados",methods=['GET'])
 def getResultadoes():
     json=miControladorResultado.index()
     return jsonify(json)
 
+#-------Resultados por id-------#
 @app.route("/resultados/<string:id>",methods=['GET'])
 def getResultado(id):
     json=miControladorResultado.show(id)
     return jsonify(json)
 
+#-------Ingresar votos por mesa y candidato-------#
 @app.route("/resultados/mesa/<string:id_mesa>/candidato/<string:id_candidato>",methods=['POST'])
 def crearResultado(id_mesa,id_candidato):
     data = request.get_json()
     json=miControladorResultado.create(data,id_mesa,id_candidato)
     return jsonify(json)
 
+#-------Actualizar votos de un documento existente por id mesa y id candidato-------#
 @app.route("/resultados/<string:id_resultado>/mesa/<string:id_mesa>/candidato/<string:id_candidato>",methods=['PUT'])
 def modificarResultado(id_resultado,id_mesa,id_candidato):
     data = request.get_json()
     json=miControladorResultado.update(id_resultado,data,id_mesa,id_candidato)
     return jsonify(json)
 
+#-------Eliminar documento votos por id.-------#
 @app.route("/resultados/<string:id_resultado>",methods=['DELETE'])
 def eliminarResultado(id_resultado):
     json=miControladorResultado.delete(id_resultado)
     return jsonify(json)
 
-#votos por candidato en todas las mesas
+#-------Votos por candidato en todas las mesas-------#
 @app.route("/resultados/candidato/<string:id_candidato>",methods=['GET'])
 def votosPorCandidato(id_candidato):
     json=miControladorResultado.listarVotosPorCandidato(id_candidato)
     return jsonify(json)
 
-#resultado más alto de un candidato.
+#-------Cantidado con votos mas altos-------#
 @app.route("/resultados/votos_mayores",methods=['GET'])
 def getVotosMayores():
     json=miControladorResultado.votosMasAltosPorCandidato()
     return jsonify(json)
 
-#promedio de votos por cantidado en todas las mesas
+#-------Promedio votos por canditado en todas las mesas-------#
 @app.route("/resultados/promedio_votos/candidato/<string:id_candidato>",methods=['GET'])
 def getPromedioVotosPorCandidato(id_candidato):
     json=miControladorResultado.promedioVotosPorCandidato(id_candidato)
     return jsonify(json)
 
+
 if __name__ == '__main__':
 
     dataConfig = loadFileConfig()
     baseDatos = client["votaciones"];
-    print(baseDatos.list_collection_names());
-
+    #print(baseDatos.list_collection_names());
     print("Server running : " + "http://" + dataConfig["url-backend"] + ":" + str(dataConfig["port"]))
     serve(app, host=dataConfig["url-backend"], port=dataConfig["port"])

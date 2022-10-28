@@ -31,7 +31,7 @@ class RepositorioResultado(InterfaceRepositorio[Resultado]):
           "$group": {
             "_id": "$candidato",
             "promedio": {
-              "$sum": "$votos"
+              "$avg": "$votos"
             }
           }
         }
