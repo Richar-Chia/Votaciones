@@ -1,0 +1,6 @@
+{ 
+ "url-backend": "127.0.0.1", 
+ "port": 9999,
+ "data-db-connection": "mongodb+srv://rinwer:824657919@cluster0.g0rlmpl.mongodb.net/votaciones?retryWrites=true&w=majority",
+ "name-db":"votaciones"
+} 
