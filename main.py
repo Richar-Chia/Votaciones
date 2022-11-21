@@ -31,30 +31,29 @@ def loadFileConfig():
 
 #*************** Metodos para actualizar la coleccion Mesa ***************#
 @app.route("/mesas", methods=['GET'])
-def getEstudiantes():
+def getMesas():
     json = miControladorMesa.index();
     return jsonify(json);
 
 @app.route("/mesas", methods=['POST'])
-def crearEstudiante():
+def crearMesa():
     data = request.get_json();
-    print("hola: ", data)
     json = miControladorMesa.create(data)
     return jsonify(json)
 
 @app.route("/mesas/<string:id>", methods=['GET'])
-def getEstudiante(id):
+def getMesa(id):
     json = miControladorMesa.show(id);
     return jsonify(json)
 
 @app.route("/mesas/<string:id>", methods=['PUT'])
-def modificarEstudiante(id):
+def modificarMesa(id):
     data = request.get_json();
     json = miControladorMesa.update(id, data);
     return jsonify(json);
 
 @app.route("/mesas/<string:id>", methods=['DELETE'])
-def eliminarEstudiante(id):
+def eliminarMesa(id):
     json = miControladorMesa.delete(id);
     return jsonify(json);
 
@@ -67,7 +66,6 @@ def getPartidos():
 @app.route("/partidos", methods=['POST'])
 def crearPartido():
     data = request.get_json();
-    print("hola: ", data)
     json = miControladorPartido.create(data)
     return jsonify(json)
 
@@ -96,7 +94,6 @@ def getcandidatos():
 @app.route("/candidatos", methods=['POST'])
 def crearcandidato():
     data = request.get_json();
-    print("hola: ", data)
     json = miControladorCandidato.create(data)
     return jsonify(json)
 
